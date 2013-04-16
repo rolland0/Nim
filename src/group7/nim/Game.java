@@ -1,7 +1,6 @@
 package group7.nim;
 
 import java.util.Random;
-import java.util.Scanner;
 
 public class Game {
 	enum GameType {
@@ -10,8 +9,8 @@ public class Game {
 
 	AI compAI;
 	BoardState board;
-	Scanner scan;
 	Random rand;
+	IO userIO;
 	int numRows = 3;
 	boolean player1Turn = true;
 	boolean humanTurn = false;
@@ -21,7 +20,7 @@ public class Game {
 	Game() {
 		compAI = new AI();
 		board = new BoardState(3, 5, 7);
-		scan = new Scanner(System.in);
+		userIO = new IO();
 		rand = new Random();
 	}
 
@@ -30,18 +29,13 @@ public class Game {
 	}
 
 	public boolean menu() {
-		boolean validInput = false;
-
-		while (!validInput) {
-			System.out
-					.println("Please enter the number of how you wish to play:"
+			int selection = userIO.promptUserForValidInt(
+					"Please enter the number of how you wish to play:"
 							+ "\n1 - Player Vs. Player"
 							+ "\n2 - Player Vs. Computer"
-							+ "\n3 - Computer Vs. Computer" + "\n4 - Quit");
+							+ "\n3 - Computer Vs. Computer" + "\n4 - Quit",
+					new int[] { 1, 2, 3, 4 });
 
-			int selection = scan.nextInt();
-
-			validInput = true;
 			switch (selection) {
 			case 1:
 				gameType = GameType.playerVersusPlayer;
@@ -51,19 +45,13 @@ public class Game {
 				break;
 			case 3:
 				gameType = GameType.computerVersusComputer;
-				validInput = false;
-				while (!validInput) {
-					System.out
-							.println("How many games should the computers play?");
-					int games = scan.nextInt();
-					if (games > 0) {
-						validInput = true;
-						gamesToPlay = games;
-					}
-					selectStart();
-				}
+				gamesToPlay = userIO
+						.promptUserForValidIntAboveZero("How many games should the computers play?");
+				selectStart();
+				break;
+			case 4:
+				return false;
 			}
-		}
 
 		for (int i = 0; i < gamesToPlay; i++) {
 			reset();
@@ -122,38 +110,44 @@ public class Game {
 				player1Turn = !player1Turn;
 				swapPlayers();
 			} else {
-				System.out.println("Enter row number: ");
-				int rowNum = scan.nextInt();
-				System.out.println("Enter amount to take: ");
-				int numTook = scan.nextInt();
+				boolean moveMade = false;
+				do {
 
-				if (rowNum == 1) {
-					if (numTook <= board.row1 && numTook > 0) {
-						board.row1 -= numTook;
+					int rowNum = userIO.promptUserForValidInt(
+							"Enter row number: ", new int[] { 1, 2, 3 });
+					System.out.println();
+					int numTook = userIO
+							.promptUserForValidIntAboveZero("Enter amount to take: ");
+
+					switch (rowNum) {
+					case 1:
+						if (numTook <= board.row1) {
+							board.row1 -= numTook;
+							moveMade = true;
+						}
+						break;
+
+					case 2:
+						if (numTook <= board.row2) {
+							board.row2 -= numTook;
+							moveMade = true;
+						}
+						break;
+
+					case 3:
+						if (numTook <= board.row3) {
+							board.row3 -= numTook;
+							moveMade = true;
+						}
+						break;						
+					}
+					if(!moveMade)
+						System.out.println("Invalid move. Try again.");
+					else {
 						player1Turn = !player1Turn;
 						swapPlayers();
-					} else
-						System.out
-								.println("illegal move, please remake your choice");
-				} else if (rowNum == 2 && numTook > 0) {
-					if (numTook <= board.row2) {
-						board.row2 -= numTook;
-						player1Turn = !player1Turn;
-						swapPlayers();
-					} else
-						System.out
-								.println("illegal move, please remake your choice");
-				} else if (rowNum == 3 && numTook > 0) {
-					if (numTook <= board.row3) {
-						board.row3 -= numTook;
-						player1Turn = !player1Turn;
-						swapPlayers();
-					} else
-						System.out
-								.println("illegal move, please remake your choice");
-				} else
-					System.out
-							.println("illegal move, please remake your choice");
+					}
+				} while (!moveMade);
 			}
 		}
 		return false;
