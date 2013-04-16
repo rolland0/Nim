@@ -7,7 +7,7 @@ public class AI {
 	ArrayList<BoardState> states;
 	Average[][][] stats;
 	ArrayList<BoardState> moves;
-	
+
 	public AI() {
 		states = new ArrayList<BoardState>();
 		stats = new Average[4][6][8];
@@ -20,18 +20,18 @@ public class AI {
 			}
 		}
 	}
-	
-	public void reset(){
-		
+
+	public void reset() {
+
 	}
-	
+
 	public void learn() {
 		assignValues();
 		recordValues();
 	}
-	
-	public void update(BoardState board) {
-		states.add(board);
+
+	public BoardState update(BoardState board) {
+		states.add(0, board);
 		if (board.row1 == 0 && board.row2 == 0) {
 			if (board.row3 > 1) {
 				System.out.println("Row Number: 3\nCount Removed: "
@@ -60,8 +60,9 @@ public class AI {
 				System.out.println("Row Number: 1\nCount Removed: 1");
 			}
 		} else {
-			randomRowSelect(board);
+			board = randomRowSelect(board);
 		}
+		return board;
 	}
 
 	private void getMoves() {
@@ -92,8 +93,8 @@ public class AI {
 			}
 		}
 	}
-	
-	private void randomRowSelect(BoardState board) {
+
+	private BoardState randomRowSelect(BoardState board) {
 		getMoves();
 		sortMovesByValue();
 		BoardState wantedState = moves.get(0);
@@ -116,10 +117,9 @@ public class AI {
 			int difference = currentState.row3 - wantedState.row3;
 			System.out.println("Count Removed: " + difference);
 		}
-
-		board = wantedState;
+		return wantedState;
 	}
-	
+
 	private void assignValues() {
 		if (states.get(0).isGameOver()) {
 			int numStates = states.size() - 1;
@@ -145,7 +145,7 @@ public class AI {
 
 		}
 	}
-	
+
 	private void recordValues() {
 		for (BoardState state : states) {
 			stats[state.row1][state.row2][state.row3].add(state.val);
