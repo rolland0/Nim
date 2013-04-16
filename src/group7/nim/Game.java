@@ -1,7 +1,7 @@
 package group7.nim;
 
-import java.util.Scanner;
 import java.util.Random;
+import java.util.Scanner;
 
 
 
@@ -106,16 +106,11 @@ public class Game {
 	}
 
 	public boolean update() {
-		System.out
-				.println("---------------------------------------------------------------");
+		board.print();
 		if (player1Turn)
 			System.out.println("PLAYER 1\n");
 		else
 			System.out.println("PLAYER 2\n");
-
-		System.out.println("Row 1: " + board.row1);
-		System.out.println("Row 2: " + board.row2);
-		System.out.println("Row 3: " + board.row3 + "\n");
 
 		if (board.isGameOver()) {
 			if (player1Turn)

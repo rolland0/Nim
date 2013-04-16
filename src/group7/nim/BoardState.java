@@ -11,6 +11,7 @@ public class BoardState implements Comparable<BoardState> {
 	int row2;
 	int row3;
 	double val;
+	int symbol = 64;
 
 	public BoardState(int r1, int r2, int r3) {
 		row1 = r1;
@@ -22,6 +23,24 @@ public class BoardState implements Comparable<BoardState> {
 		row1 = copy.row1;
 		row2 = copy.row2;
 		row3 = copy.row3;
+	}
+	
+	public void print()
+	{
+		for(int i = 0; i < row1; i++) {
+			System.out.print((i+1) + " ");
+		}
+		System.out.println();
+		
+		for (int i = 0; i < row2; i++) {
+			System.out.print((i+1) + " ");
+		}
+		System.out.println();
+		
+		for (int i = 0; i < row3; i++) {
+			System.out.print((i+1) + " ");
+		}
+		System.out.println();
 	}
 
 	public String toString() {
