@@ -14,7 +14,7 @@ public class Game {
 	int numRows = 3;
 	boolean player1Turn = true;
 	boolean humanTurn = false;
-	GameType gameType;
+	GameType currentGameType;
 	int gamesToPlay = 1;
 
 	Game() {
@@ -38,13 +38,13 @@ public class Game {
 
 			switch (selection) {
 			case 1:
-				gameType = GameType.playerVersusPlayer;
+				currentGameType = GameType.playerVersusPlayer;
 				break;
 			case 2:
-				gameType = GameType.playerVersusComputer;
+				currentGameType = GameType.playerVersusComputer;
 				break;
 			case 3:
-				gameType = GameType.computerVersusComputer;
+				currentGameType = GameType.computerVersusComputer;
 				gamesToPlay = userIO
 						.promptUserForValidIntAboveZero("How many games should the computers play?");
 				selectStart();
@@ -69,7 +69,7 @@ public class Game {
 	public void selectStart() {
 		int choice = rand.nextInt(10) + 1;
 
-		if (choice % 2 == 0) {
+		if (choice % 2 == 0 && currentGameType != GameType.computerVersusComputer) {
 			humanTurn = true;
 
 			System.out.println("You are Player 1");
@@ -78,7 +78,7 @@ public class Game {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		} else {
+		} else if(choice%2 != 0  && currentGameType != GameType.computerVersusComputer){
 			humanTurn = false;
 
 			System.out.println("You are Player 2");
@@ -104,8 +104,8 @@ public class Game {
 				System.out.println("Player 2 is the winner!");
 			return true;
 		} else {
-			if (gameType == GameType.computerVersusComputer
-					|| (gameType == GameType.playerVersusComputer && !humanTurn)) {
+			if (currentGameType == GameType.computerVersusComputer
+					|| (currentGameType == GameType.playerVersusComputer && !humanTurn)) {
 				board = compAI.update(board);
 				player1Turn = !player1Turn;
 				swapPlayers();
@@ -154,7 +154,7 @@ public class Game {
 	}
 
 	public void swapPlayers() {
-		if (gameType == GameType.playerVersusComputer) {
+		if (currentGameType == GameType.playerVersusComputer) {
 			humanTurn = !humanTurn;
 		}
 	}
