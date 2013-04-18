@@ -29,29 +29,29 @@ public class Game {
 	}
 
 	public boolean menu() {
-			int selection = userIO.promptUserForValidInt(
-					"Please enter the number of how you wish to play:"
-							+ "\n1 - Player Vs. Player"
-							+ "\n2 - Player Vs. Computer"
-							+ "\n3 - Computer Vs. Computer" + "\n4 - Quit",
-					new int[] { 1, 2, 3, 4 });
+		int selection = userIO.promptUserForValidInt(
+				"Please enter the number of how you wish to play:"
+						+ "\n1 - Player Vs. Player"
+						+ "\n2 - Player Vs. Computer"
+						+ "\n3 - Computer Vs. Computer" + "\n4 - Quit",
+						new int[] { 1, 2, 3, 4 });
 
-			switch (selection) {
-			case 1:
-				currentGameType = GameType.playerVersusPlayer;
-				break;
-			case 2:
-				currentGameType = GameType.playerVersusComputer;
-				break;
-			case 3:
-				currentGameType = GameType.computerVersusComputer;
-				gamesToPlay = userIO
-						.promptUserForValidIntAboveZero("How many games should the computers play?");
-				selectStart();
-				break;
-			case 4:
-				return false;
-			}
+		switch (selection) {
+		case 1:
+			currentGameType = GameType.playerVersusPlayer;
+			break;
+		case 2:
+			currentGameType = GameType.playerVersusComputer;
+			break;
+		case 3:
+			currentGameType = GameType.computerVersusComputer;
+			gamesToPlay = userIO
+					.promptUserForValidIntAboveZero("How many games should the computers play?");
+			selectStart();
+			break;
+		case 4:
+			return false;
+		}
 
 		for (int i = 0; i < gamesToPlay; i++) {
 			reset();
@@ -67,9 +67,7 @@ public class Game {
 	}
 
 	public void selectStart() {
-		int choice = rand.nextInt(10) + 1;
-
-		if (choice % 2 == 0 && currentGameType != GameType.computerVersusComputer) {
+		if (isPlayer1Turn() && !isComputerVsComputer()) {
 			humanTurn = true;
 
 			System.out.println("You are Player 1");
@@ -78,7 +76,7 @@ public class Game {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		} else if(choice%2 != 0  && currentGameType != GameType.computerVersusComputer){
+		} else if(!isPlayer1Turn()  && !isComputerVsComputer()){
 			humanTurn = false;
 
 			System.out.println("You are Player 2");
@@ -88,6 +86,15 @@ public class Game {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private Boolean isComputerVsComputer(){
+		return currentGameType == GameType.computerVersusComputer;
+	}
+
+	private Boolean isPlayer1Turn(){
+		int choice = rand.nextInt(10) + 1;
+		return choice%2==0;
 	}
 
 	public boolean update() {
@@ -141,11 +148,12 @@ public class Game {
 						}
 						break;						
 					}
-					if(!moveMade)
-						System.out.println("Invalid move. Try again.");
-					else {
+					if(moveMade){
 						player1Turn = !player1Turn;
 						swapPlayers();
+					}
+					else {
+						System.out.println("Invalid move. Try again.");
 					}
 				} while (!moveMade);
 			}

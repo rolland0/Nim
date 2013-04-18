@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class AI {
-	ArrayList<BoardState> states;
-	Average[][][] stats;
-	ArrayList<BoardState> moves;
+	private ArrayList<BoardState> states;
+	private Average[][][] stats;
+	private ArrayList<BoardState> moves;
 
 	public AI() {
 		states = new ArrayList<BoardState>();
 		stats = new Average[4][6][8];
 		moves = new ArrayList<BoardState>();
-		for (int i = 0; i <= BoardState.Row1Max; i++) {
-			for (int j = 0; j <= BoardState.Row2Max; j++) {
-				for (int k = 0; k <= BoardState.Row3Max; k++) {
+		for (int i = 0; i <= BoardState.RowMaxes.ROW1.getValue(); i++) {
+			for (int j = 0; j <= BoardState.RowMaxes.ROW2.getValue(); j++) {
+				for (int k = 0; k <= BoardState.RowMaxes.ROW3.getValue(); k++) {
 					stats[i][j][k] = new Average();
 				}
 			}
@@ -69,7 +69,7 @@ public class AI {
 		moves.clear();
 		BoardState curState = states.get(0);
 
-		for (int i = 1; i < BoardState.Row1Max + 1; i++) {
+		for (int i = 1; i < BoardState.RowMaxes.ROW1.getValue() + 1; i++) {
 			if (curState.row1 - i >= 0) {
 				BoardState tmpState = new BoardState(curState);
 				tmpState.row1 -= i;
@@ -77,7 +77,7 @@ public class AI {
 			}
 		}
 
-		for (int j = 1; j < BoardState.Row2Max + 1; j++) {
+		for (int j = 1; j < BoardState.RowMaxes.ROW2.getValue() + 1; j++) {
 			if (curState.row2 - j >= 0) {
 				BoardState tmpState = new BoardState(curState);
 				tmpState.row2 -= j;
@@ -85,7 +85,7 @@ public class AI {
 			}
 		}
 
-		for (int k = 1; k < BoardState.Row3Max + 1; k++) {
+		for (int k = 1; k < BoardState.RowMaxes.ROW3.getValue() + 1; k++) {
 			if (curState.row3 - k >= 0) {
 				BoardState tmpState = new BoardState(curState);
 				tmpState.row3 -= k;

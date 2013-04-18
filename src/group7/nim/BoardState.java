@@ -1,11 +1,14 @@
 package group7.nim;
 
 public class BoardState implements Comparable<BoardState> {
-	public static final int Row1Max = 3;
-	public static final int Row2Max = 5;
-	public static final int Row3Max = 7;
-	public static final int MaxStates = (Row1Max + 1) * (Row2Max + 1)
-			* (Row3Max + 1);
+	public enum RowMaxes{
+		ROW1(3), ROW2(5), ROW3(7), MAX(18);
+		private int value;
+		
+		private RowMaxes(int value){this.value = value;}
+		
+		public int getValue(){return value;}
+	}
 
 	int row1;
 	int row2;
