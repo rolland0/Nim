@@ -30,94 +30,86 @@ public class AI {
 		recordValues();
 	}
 
-	public BoardState update(BoardState board) {
-		states.add(0, board);
-		if (board.row1 == 0 && board.row2 == 0) {
-			if (board.row3 > 1) {
+	public int[] update(int[] rows) {
+		states.add(0, new BoardState(rows));
+		
+		if (rows[0] == 0 && rows[1] == 0) {
+			if (rows[2] > 1) {
 				System.out.println("Row Number: 3\nCount Removed: "
-						+ (board.row3 - 1));
-				board.row3 = 1;
+						+ (rows[2] - 1));
+				rows[2] = 1;
 			} else {
-				board.row3 = 0;
+				rows[2] = 0;
 				System.out.println("Row Number: 3\nCount Removed: 1");
 			}
-		} else if (board.row1 == 0 && board.row3 == 0) {
-			if (board.row2 > 1) {
-				board.row2 = 1;
+		} else if (rows[0] == 0 && rows[2] == 0) {
+			if (rows[1] > 1) {
+				rows[1] = 1;
 				System.out.println("Row Number: 2\nCount Removed: "
-						+ (board.row3 - 1));
+						+ (rows[2] - 1));
 			} else {
-				board.row2 = 0;
+				rows[1] = 0;
 				System.out.println("Row Number: 2\nCount Removed: 1");
 			}
-		} else if (board.row2 == 0 && board.row3 == 0) {
-			if (board.row1 > 1) {
-				board.row1 = 1;
+		} else if (rows[1] == 0 && rows[2] == 0) {
+			if (rows[0] > 1) {
+				rows[0] = 1;
 				System.out.println("Row Number: 1\nCount Removed: "
-						+ (board.row3 - 1));
+						+ (rows[2] - 1));
 			} else {
-				board.row1 = 0;
+				rows[0] = 0;
 				System.out.println("Row Number: 1\nCount Removed: 1");
 			}
 		} else {
-			board = randomRowSelect(board);
+			rows = randomRowSelect(rows);
 		}
-		return board;
+		return rows;
 	}
 
 	private void getMoves() {
 		moves.clear();
-		BoardState curState = states.get(0);
+		int[] rows = states.get(0).getRows();
+		int[] tmpRows;
 
 		for (int i = 1; i < BoardState.Row1Max + 1; i++) {
-			if (curState.row1 - i >= 0) {
-				BoardState tmpState = new BoardState(curState);
-				tmpState.row1 -= i;
-				moves.add(tmpState);
+			if (rows[0] - i >= 0) {
+				tmpRows = rows;
+				tmpRows[0] -= i;
+				moves.add(new BoardState(tmpRows));
 			}
 		}
 
 		for (int j = 1; j < BoardState.Row2Max + 1; j++) {
-			if (curState.row2 - j >= 0) {
-				BoardState tmpState = new BoardState(curState);
-				tmpState.row2 -= j;
-				moves.add(tmpState);
+			if (rows[1] - j >= 0) {
+				tmpRows = rows;
+				tmpRows[1] -= j;
+				moves.add(new BoardState(tmpRows));
 			}
 		}
 
 		for (int k = 1; k < BoardState.Row3Max + 1; k++) {
-			if (curState.row3 - k >= 0) {
-				BoardState tmpState = new BoardState(curState);
-				tmpState.row3 -= k;
-				moves.add(tmpState);
+			if (rows[2] - k >= 0) {
+				tmpRows = rows;
+				tmpRows[2] -= k;
+				moves.add(new BoardState(tmpRows));
 			}
 		}
 	}
 
-	private BoardState randomRowSelect(BoardState board) {
+	private int[] randomRowSelect(int[] rows) {
 		getMoves();
 		sortMovesByValue();
-		BoardState wantedState = moves.get(0);
-		BoardState currentState = board;
-
-		if (currentState.row1 != wantedState.row1) {
-			System.out.println("Row Number: 1");
-			int difference = currentState.row1 - wantedState.row1;
-			System.out.println("Count Removed: " + difference);
+		int[] idealRows = moves.get(0).getRows();
+		
+		for(int i = 0; i < rows.length; i++) {
+			if (rows[i] != idealRows[i]) {
+				System.out.println("Row Number: " + i);
+				int difference = rows[i] - idealRows[i];
+				System.out.println("Count Removed: " + difference);
+				break;
+			}
 		}
-
-		if (currentState.row2 != wantedState.row2) {
-			System.out.println("Row Number: 2");
-			int difference = currentState.row2 - wantedState.row2;
-			System.out.println("Count Removed: " + difference);
-		}
-
-		if (currentState.row3 != wantedState.row3) {
-			System.out.println("Row Number: 3");
-			int difference = currentState.row3 - wantedState.row3;
-			System.out.println("Count Removed: " + difference);
-		}
-		return wantedState;
+		return idealRows;
 	}
 
 	private void assignValues() {
@@ -148,13 +140,15 @@ public class AI {
 
 	private void recordValues() {
 		for (BoardState state : states) {
-			stats[state.row1][state.row2][state.row3].add(state.val);
+			int[] rows = state.getRows();
+			stats[rows[0]][rows[1]][rows[2]].add(state.getVal());
 		}
 	}
 
 	private void sortMovesByValue() {
 		for (BoardState move : moves) {
-			move.val = stats[move.row1][move.row2][move.row3].getValue();
+			int[] rows = move.getRows();
+			move.setVal(stats[rows[0]][rows[1]][rows[2]].getValue());
 		}
 
 		Collections.sort(moves);

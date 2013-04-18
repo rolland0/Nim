@@ -4,40 +4,54 @@ public class BoardState implements Comparable<BoardState> {
 	public static final int Row1Max = 3;
 	public static final int Row2Max = 5;
 	public static final int Row3Max = 7;
-	public static final int MaxStates = (Row1Max + 1) * (Row2Max + 1)
-			* (Row3Max + 1);
 
-	int row1;
-	int row2;
-	int row3;
-	double val;
+	private int row1;
+	private int row2;
+	private int row3;
+	private double val;
 
 	public BoardState(int r1, int r2, int r3) {
 		row1 = r1;
 		row2 = r2;
 		row3 = r3;
 	}
-
-	public BoardState(BoardState copy) {
-		row1 = copy.row1;
-		row2 = copy.row2;
-		row3 = copy.row3;
+	
+	public BoardState(int[] rows) {
+		setRows(rows);
+	}
+	
+	public int[] getRows() {
+		return new int[]{row1, row2, row3};
+	}
+	
+	public void setRows(int rows[]) {
+		if(rows.length < 3) {
+			row1 = 0;
+			row2 = 0;
+			row3 = 0;
+		}
+		else {
+			row1 = rows[0];
+			row2 = rows[1];
+			row3 = rows[2];
+		}
+	}
+	
+	public double getVal() {
+		return val;
+	}
+	
+	public void setVal(double value) {
+		val = value;
 	}
 
 	public void print() {
-		for (int i = 0; i < row1; i++) {
-			System.out.print((i + 1) + " ");
-		}
-		System.out.println();
-
-		for (int i = 0; i < row2; i++) {
-			System.out.print((i + 1) + " ");
-		}
-		System.out.println();
-
-		for (int i = 0; i < row3; i++) {
-			System.out.print((i + 1) + " ");
-		}
+		
+		System.out.println("-------");
+		System.out.println(row1);
+		System.out.println(row2);
+		System.out.println(row3);
+		System.out.println("-------");
 		System.out.println();
 	}
 

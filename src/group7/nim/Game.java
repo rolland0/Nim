@@ -89,7 +89,7 @@ public class Game {
 			}
 		}
 	}
-
+	
 	public boolean update() {
 		board.print();
 		if (player1Turn)
@@ -106,7 +106,7 @@ public class Game {
 		} else {
 			if (gameType == GameType.computerVersusComputer
 					|| (gameType == GameType.playerVersusComputer && !humanTurn)) {
-				board = compAI.update(board);
+				board.setRows(compAI.update(board.getRows()));
 				player1Turn = !player1Turn;
 				swapPlayers();
 			} else {
@@ -118,32 +118,18 @@ public class Game {
 					System.out.println();
 					int numTook = userIO
 							.promptUserForValidIntAboveZero("Enter amount to take: ");
-
-					switch (rowNum) {
-					case 1:
-						if (numTook <= board.row1) {
-							board.row1 -= numTook;
+					
+					int[] rows = board.getRows();
+					
+						if(numTook <= rows[rowNum-1]) {
+							rows[rowNum-1] -= numTook;
 							moveMade = true;
 						}
-						break;
-
-					case 2:
-						if (numTook <= board.row2) {
-							board.row2 -= numTook;
-							moveMade = true;
-						}
-						break;
-
-					case 3:
-						if (numTook <= board.row3) {
-							board.row3 -= numTook;
-							moveMade = true;
-						}
-						break;						
-					}
+						
 					if(!moveMade)
 						System.out.println("Invalid move. Try again.");
 					else {
+						board.setRows(rows);
 						player1Turn = !player1Turn;
 						swapPlayers();
 					}
