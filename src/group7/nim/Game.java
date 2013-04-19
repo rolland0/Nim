@@ -67,24 +67,16 @@ public class Game {
 	}
 
 	public void selectStart() {
-		if (isPlayer1Turn() && !isComputerVsComputer()) {
-			humanTurn = true;
+		if(!isComputerVsComputer()){
+			humanTurn=(isPlayer1Turn())? true:false;
+			int currentUsersPlayerNumber=(humanTurn)? 1:2;
+			System.out.println("You are Player " + currentUsersPlayerNumber);
+		}
 
-			System.out.println("You are Player 1");
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		} else if(!isPlayer1Turn()  && !isComputerVsComputer()){
-			humanTurn = false;
-
-			System.out.println("You are Player 2");
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -97,18 +89,18 @@ public class Game {
 		return choice%2==0;
 	}
 
+	private int determineWhichPlayer(){
+		return (player1Turn)? 1:2;
+	}
+	
 	public boolean update() {
 		board.print();
-		if (player1Turn)
-			System.out.println("PLAYER 1\n");
-		else
-			System.out.println("PLAYER 2\n");
+		int declareWhoseTurn=determineWhichPlayer();
+			System.out.println("PLAYER " + declareWhoseTurn + "\n");
 
 		if (board.isGameOver()) {
-			if (player1Turn)
-				System.out.println("Player 1 is the winner!");
-			else
-				System.out.println("Player 2 is the winner!");
+			int declareWhoWins=determineWhichPlayer();
+			System.out.println("PLAYER " + declareWhoWins + " is the winner!\n");
 			return true;
 		} else {
 			if (currentGameType == GameType.computerVersusComputer

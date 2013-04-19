@@ -119,6 +119,10 @@ public class AI {
 		}
 		return wantedState;
 	}
+	
+	private Boolean isEven(int numToCheck){
+		return numToCheck%2==0;
+	}
 
 	private void assignValues() {
 		if (states.get(0).isGameOver()) {
@@ -131,7 +135,7 @@ public class AI {
 			float target;
 
 			for (int i = 0; i < numStates; i++) {
-				if (i % 2 == 0) // even
+				if (isEven(i)) // even
 				{
 					target = -1 * ((numEvens - curEven) / (float) numEvens);
 					curEven++;
