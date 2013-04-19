@@ -3,12 +3,14 @@ package group7.nim;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class AI {
-	ArrayList<BoardState> states;
-	Average[][][] stats;
-	ArrayList<BoardState> moves;
+public class AI implements IPlayer {
+	private ArrayList<BoardState> states;
+	private Average[][][] stats;
+	private ArrayList<BoardState> moves;
+	private String name;
 
-	public AI() {
+	public AI(String name) {
+		this.name = name;
 		states = new ArrayList<BoardState>();
 		stats = new Average[4][6][8];
 		moves = new ArrayList<BoardState>();
@@ -21,16 +23,8 @@ public class AI {
 		}
 	}
 
-	public void reset() {
-
-	}
-
-	public void learn() {
-		assignValues();
-		recordValues();
-	}
-
-	public int[] update(int[] rows) {
+	@Override
+	public int[] takeTurn(int[] rows) {
 		states.add(0, new BoardState(rows));
 		
 		if (rows[0] == 0 && rows[1] == 0) {
@@ -153,6 +147,17 @@ public class AI {
 
 		Collections.sort(moves);
 
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void postGame() {
+		assignValues();
+		recordValues();
 	}
 
 }
