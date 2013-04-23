@@ -67,7 +67,13 @@ public class Game {
 			}
 		
 	}
-
+	
+	public void update() {
+		board.print();
+		board.setRows(players.get(playerTurn).takeTurn(board.getRows()));
+		swapTurn();
+	}
+	
 	public String getWinner() {
 		return players.get(playerTurn).getName();
 	}
@@ -78,11 +84,7 @@ public class Game {
 		players.add(shuffledPlayer);
 	}
 	
-	public void update() {
-		board.print();
-		board.setRows(players.get(playerTurn).takeTurn(board.getRows()));
-		swapTurn();
-	}
+
 	
 	public void postGame() {
 		for(IPlayer player : players) {
