@@ -28,42 +28,43 @@ public class Game {
 		board = new BoardState(3, 5, 7);
 	}
 
-	public boolean menu() {
-		int selection = userIO.promptUserForValidInt(
-				"Please enter the number of how you wish to play:"
-						+ "\n1 - Player Vs. Player"
-						+ "\n2 - Player Vs. Computer"
-						+ "\n3 - Computer Vs. Computer" + "\n4 - Quit",
-						new int[] { 1, 2, 3, 4 });
+	public void menu() {
+		final int userWantsToQuit = 4;
+		int selection;
+		do{
+			selection = userIO.promptUserForValidInt(
+					"Please enter the number of how you wish to play:"
+							+ "\n1 - Player Vs. Player"
+							+ "\n2 - Player Vs. Computer"
+							+ "\n3 - Computer Vs. Computer" + "\n4 - Quit",
+							new int[] { 1, 2, 3, 4 });
 
-		switch (selection) {
-		case 1:
-			currentGameType = GameType.playerVersusPlayer;
-			break;
-		case 2:
-			currentGameType = GameType.playerVersusComputer;
-			break;
-		case 3:
-			currentGameType = GameType.computerVersusComputer;
-			gamesToPlay = userIO
-					.promptUserForValidIntAboveZero("How many games should the computers play?");
-			selectStart();
-			break;
-		case 4:
-			return false;
+			switch (selection) {
+			case 1:
+				currentGameType = GameType.playerVersusPlayer;
+				break;
+			case 2:
+				currentGameType = GameType.playerVersusComputer;
+				break;
+			case 3:
+				currentGameType = GameType.computerVersusComputer;
+				gamesToPlay = userIO
+						.promptUserForValidIntAboveZero("How many games should the computers play?");
+				selectStart();
+				break;
+			}
+
+			for (int i = 0; i < gamesToPlay; i++) {
+				reset();
+				while (!update())
+					;
+				compAI.learn();
+				// reset();
+			}
+
+			gamesToPlay = 1;
 		}
-
-		for (int i = 0; i < gamesToPlay; i++) {
-			reset();
-			while (!update())
-				;
-			compAI.learn();
-			// reset();
-		}
-
-		gamesToPlay = 1;
-
-		return true;
+		while(selection != userWantsToQuit);
 	}
 
 	public void selectStart() {
@@ -79,7 +80,7 @@ public class Game {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private Boolean isComputerVsComputer(){
 		return currentGameType == GameType.computerVersusComputer;
 	}
@@ -92,11 +93,11 @@ public class Game {
 	private int determineWhichPlayer(){
 		return (player1Turn)? 1:2;
 	}
-	
+
 	public boolean update() {
 		board.print();
 		int declareWhoseTurn=determineWhichPlayer();
-			System.out.println("PLAYER " + declareWhoseTurn + "\n");
+		System.out.println("PLAYER " + declareWhoseTurn + "\n");
 
 		if (board.isGameOver()) {
 			int declareWhoWins=determineWhichPlayer();
