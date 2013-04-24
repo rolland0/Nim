@@ -9,16 +9,24 @@ public class BoardState implements Comparable<BoardState> {
 		
 		public int getValue(){return value;}
 	}
+	
+	private final int NumRows = 3;
 
-	private int row1;
-	private int row2;
-	private int row3;
+	private int topRowValue;
+	private int middleRowValue;
+	private int bottomRowValue;
 	private double val;
+	
+	public BoardState() {
+		topRowValue = RowMaxes.ROW1.getValue();
+		middleRowValue = RowMaxes.ROW2.getValue();
+		bottomRowValue = RowMaxes.ROW3.getValue();
+	}
 
 	public BoardState(int r1, int r2, int r3) {
-		row1 = r1;
-		row2 = r2;
-		row3 = r3;
+		topRowValue = r1;
+		middleRowValue = r2;
+		bottomRowValue = r3;
 	}
 	
 	public BoardState(int[] rows) {
@@ -26,19 +34,19 @@ public class BoardState implements Comparable<BoardState> {
 	}
 	
 	public int[] getRows() {
-		return new int[]{row1, row2, row3};
+		return new int[]{topRowValue, middleRowValue, bottomRowValue};
 	}
 	
 	public void setRows(int rows[]) {
-		if(rows.length < 3) {
-			row1 = 0;
-			row2 = 0;
-			row3 = 0;
+		if(rows.length < NumRows) {
+			topRowValue = 0;
+			middleRowValue = 0;
+			bottomRowValue = 0;
 		}
 		else {
-			row1 = rows[0];
-			row2 = rows[1];
-			row3 = rows[2];
+			topRowValue = rows[0];
+			middleRowValue = rows[1];
+			bottomRowValue = rows[2];
 		}
 	}
 	
@@ -53,15 +61,15 @@ public class BoardState implements Comparable<BoardState> {
 	public void print() {
 		
 		System.out.println("-------");
-		System.out.println(row1);
-		System.out.println(row2);
-		System.out.println(row3);
+		System.out.println(topRowValue);
+		System.out.println(middleRowValue);
+		System.out.println(bottomRowValue);
 		System.out.println("-------");
 		System.out.println();
 	}
 
 	public String toString() {
-		return "" + row1 + " , " + row2 + " , " + row3 + " : " + val;
+		return "" + topRowValue + " , " + middleRowValue + " , " + bottomRowValue + " : " + val;
 	}
 
 	// returns true if all rows correspond
@@ -72,20 +80,20 @@ public class BoardState implements Comparable<BoardState> {
 
 		BoardState other = (BoardState) obj;
 
-		return (this.row1 == other.row1 && this.row2 == other.row2 && this.row3 == other.row3);
+		return (this.topRowValue == other.topRowValue && this.middleRowValue == other.middleRowValue && this.bottomRowValue == other.bottomRowValue);
 	}
 
 	public int hashCode() {
 		int hash = 1;
-		hash = hash * 17 + row1;
-		hash = hash * 31 + row2;
-		hash = hash * 13 + row3;
+		hash = hash * 17 + topRowValue;
+		hash = hash * 31 + middleRowValue;
+		hash = hash * 13 + bottomRowValue;
 		return hash;
 	}
 
 	// returns true if there are no pieces left
 	public boolean isGameOver() {
-		return (this.row1 == 0 && this.row2 == 0 && this.row3 == 0);
+		return (this.topRowValue == 0 && this.middleRowValue == 0 && this.bottomRowValue == 0);
 	}
 
 	public void setValue(float value) {

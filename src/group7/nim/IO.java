@@ -25,33 +25,33 @@ public class IO {
 	}
 
 	public int promptUserForValidInt(String prompt, int[] validInts) {
-		boolean validInput = false;
+		boolean inputIsValid = false;
 		int selectedInt = 0;
 		do {
 			System.out.println(prompt);
 			selectedInt = in.nextInt();
 			for (int i : validInts) {
 				if (i == selectedInt)
-					validInput = true;
+					inputIsValid = true;
 			}
-			if (!validInput)
+			if (!inputIsValid)
 				System.out.println("Invalid selection. Try again.");
-		} while (!validInput);
+		} while (!inputIsValid);
 		return selectedInt;
 	}
 
 	public int promptUserForValidIntAboveZero(String prompt) {
-		boolean validInput = false;
+		boolean inputIsValid = false;
 		int selectedInt = 0;
 		do {
 			System.out.println(prompt);
 			selectedInt = in.nextInt();
 			if (selectedInt > 0)
-				validInput = true;
+				inputIsValid = true;
 
-			if (!validInput)
+			if (!inputIsValid)
 				System.out.println("Invalid selection. Try again.");
-		} while (!validInput);
+		} while (!inputIsValid);
 		return selectedInt;
 	}
 }

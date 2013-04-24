@@ -10,7 +10,7 @@ public class Player implements IPlayer {
 	@Override
 	public int[] takeTurn(int[] rows) {
 
-		boolean moveMade = false;
+		boolean moveHasBeenMade = false;
 		do {
 
 			int rowNum = IO.getInstance().promptUserForValidInt(
@@ -22,17 +22,17 @@ public class Player implements IPlayer {
 			
 				if(numTook <= rows[rowNum-1]) {
 					rows[rowNum-1] -= numTook;
-					moveMade = true;
+					moveHasBeenMade = true;
 				}
 				
-			if(!moveMade)
+			if(!moveHasBeenMade)
 				System.out.println("Invalid move. Try again.");
-		} while (!moveMade);
+		} while (!moveHasBeenMade);
 		return rows;
 	}
 	
 	@Override 
-	public void postGame() {
+	public void processMetaGame() {
 		
 	}
 

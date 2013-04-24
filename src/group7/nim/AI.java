@@ -22,12 +22,16 @@ public class AI implements IPlayer {
 			}
 		}
 	}
+	
+	private boolean rowsAreEmpty(int[] rows, int row1, int row2) {
+		return rows[row1] == 0 && rows[row2] == 0;
+	}
 
 	@Override
 	public int[] takeTurn(int[] rows) {
 		states.add(0, new BoardState(rows));
 		
-		if (rows[0] == 0 && rows[1] == 0) {
+		if (rowsAreEmpty(rows, 0, 1)) {
 			if (rows[2] > 1) {
 				System.out.println("Row Number: 3\nCount Removed: "
 						+ (rows[2] - 1));
@@ -36,7 +40,7 @@ public class AI implements IPlayer {
 				rows[2] = 0;
 				System.out.println("Row Number: 3\nCount Removed: 1");
 			}
-		} else if (rows[0] == 0 && rows[2] == 0) {
+		} else if (rowsAreEmpty(rows, 0, 2)) {
 			if (rows[1] > 1) {
 				rows[1] = 1;
 				System.out.println("Row Number: 2\nCount Removed: "
@@ -45,7 +49,7 @@ public class AI implements IPlayer {
 				rows[1] = 0;
 				System.out.println("Row Number: 2\nCount Removed: 1");
 			}
-		} else if (rows[1] == 0 && rows[2] == 0) {
+		} else if (rowsAreEmpty(rows, 1, 2)) {
 			if (rows[0] > 1) {
 				rows[0] = 1;
 				System.out.println("Row Number: 1\nCount Removed: "
@@ -136,7 +140,7 @@ public class AI implements IPlayer {
 		}
 	}
 
-	private void recordValues() {
+	private void recordBoardStateValues() {
 		for (BoardState state : states) {
 			int[] rows = state.getRows();
 			stats[rows[0]][rows[1]][rows[2]].add(state.getVal());
@@ -159,9 +163,9 @@ public class AI implements IPlayer {
 	}
 
 	@Override
-	public void postGame() {
+	public void processMetaGame() {
 		assignValues();
-		recordValues();
+		recordBoardStateValues();
 	}
 
 }

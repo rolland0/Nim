@@ -10,23 +10,23 @@ public class Game {
 		computerVersusComputer;
 	}
 	
-	BoardState board;
-	Random rand;
-	GameType gameType;
+	BoardState gameBoard;
+	GameType currentGameType;
 	int gamesToPlay;
 	int playerTurn;
 	ArrayList<IPlayer> players;
+	boolean shouldPlay = true;
 
 	Game() {
-		board = new BoardState(3, 5, 7);
+		gameBoard = new BoardState();
 		players = new ArrayList<IPlayer>();
-		rand = new Random();
+		
 		playerTurn = 0;
 		gamesToPlay = 1;
 	}
 
-	public void reset() {
-		GameBoard = new BoardState(3, 5, 7);
+	public void resetBoard() {
+		gameBoard = new BoardState(3, 5, 7);
 	}
 	
 	public boolean isGamesToPlay() {
@@ -34,14 +34,18 @@ public class Game {
 	}
 	
 	public boolean gameNotOver() {
-		return !board.isGameOver();
+		return shouldPlay && !gameBoard.isGameOver();
+	}
+	
+	public boolean shouldPlay() {
+		return shouldPlay;
 	}
 
 	public void setupGame() {
 			int selection = IO.getInstance().promptForGameType();
-			board = new BoardState(3, 5, 7);
+			gameBoard = new BoardState(3, 5, 7);
 			players.clear();
-			switch (userSelection) {
+			switch (selection) {
 			case 1:
 				currentGameType = GameType.playerVersusPlayer;
 				players.add(new Player("Player 1"));
@@ -64,35 +68,36 @@ public class Game {
 				gamesToPlay = IO.getInstance()
 						.promptUserForValidIntAboveZero("How many games should the computers play?");
 				break;
+			case 4:
+				shouldPlay = false;
+				break;
 			}
 		
 	}
 	
 	public void update() {
-		board.print();
-		board.setRows(players.get(playerTurn).takeTurn(board.getRows()));
-		swapTurn();
+		gameBoard.print();
+		gameBoard.setRows(players.get(playerTurn).takeTurn(gameBoard.getRows()));
+		swapCurrentPlayerTurn();
 	}
 	
 	public String getWinner() {
 		return players.get(playerTurn).getName();
 	}
 	private void shufflePlayers() {
-		int randInt = rand.nextInt(players.size());
+		int randInt = new Random().nextInt(players.size());
 		IPlayer shuffledPlayer = players.get(randInt);
 		players.remove(randInt);
 		players.add(shuffledPlayer);
 	}
 	
-
-	
 	public void postGame() {
 		for(IPlayer player : players) {
-			player.postGame();
+			player.processMetaGame();
 		}
 	}
 
-	private void swapTurn() {
+	private void swapCurrentPlayerTurn() {
 		playerTurn = (playerTurn == 0) ? 1 : 0;
 	}
 }

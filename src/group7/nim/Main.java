@@ -5,11 +5,16 @@ public class Main {
 		Game game = new Game();
 		while(game.isGamesToPlay()) {
 			game.setupGame();
-			while(game.gameNotOver()) {
-				game.update();
+			if(game.shouldPlay()) {
+				while(game.gameNotOver()) {
+					game.update();
+				}
+				System.out.println(game.getWinner() + " won!\n");
+				game.postGame();
 			}
-			System.out.println(game.getWinner() + " won!\n");
-			game.postGame();
+			else {
+				break;
+			}
 		}
 	}
 
