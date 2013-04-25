@@ -75,7 +75,7 @@ public class BoardState implements Comparable<BoardState> {
 	// returns true if all rows correspond
 	public boolean equals(Object obj) {
 		// preliminary check
-		if (obj == null || obj.getClass() == this.getClass())
+		if (obj == null || obj.getClass() != this.getClass())
 			return false;
 
 		BoardState other = (BoardState) obj;
@@ -84,11 +84,7 @@ public class BoardState implements Comparable<BoardState> {
 	}
 
 	public int hashCode() {
-		int hash = 1;
-		hash = hash * 17 + topRowValue;
-		hash = hash * 31 + middleRowValue;
-		hash = hash * 13 + bottomRowValue;
-		return hash;
+		return bottomRowValue + middleRowValue*10 + topRowValue*100;	 
 	}
 
 	// returns true if there are no pieces left

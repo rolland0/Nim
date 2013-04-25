@@ -2,27 +2,32 @@ package group7.nim;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class AI implements IPlayer {
 	private ArrayList<BoardState> states;
-	private Average[][][] stats;
+	private HashMap<BoardState, Double> stats;
 	private ArrayList<BoardState> moves;
 	private String name;
 
 	public AI(String name) {
 		this.name = name;
 		states = new ArrayList<BoardState>();
-		stats = new Average[4][6][8];
+		stats = new HashMap<BoardState, Double>();
 		moves = new ArrayList<BoardState>();
+		setupStats();
+	}
+	
+	private void setupStats() {
 		for (int i = 0; i <= BoardState.RowMaxes.ROW1.getValue(); i++) {
 			for (int j = 0; j <= BoardState.RowMaxes.ROW2.getValue(); j++) {
 				for (int k = 0; k <= BoardState.RowMaxes.ROW3.getValue(); k++) {
-					stats[i][j][k] = new Average();
+					stats.put(new BoardState(i, j, k), 0d);
 				}
 			}
 		}
 	}
-	
+
 	private boolean rowsAreEmpty(int[] rows, int row1, int row2) {
 		return rows[row1] == 0 && rows[row2] == 0;
 	}
@@ -143,14 +148,14 @@ public class AI implements IPlayer {
 	private void recordBoardStateValues() {
 		for (BoardState state : states) {
 			int[] rows = state.getRows();
-			stats[rows[0]][rows[1]][rows[2]].add(state.getVal());
+			stats.put(new BoardState(rows), state.getVal());
 		}
 	}
 
 	private void sortMovesByValue() {
 		for (BoardState move : moves) {
 			int[] rows = move.getRows();
-			move.setVal(stats[rows[0]][rows[1]][rows[2]].getValue());
+			move.setVal(stats.get(new BoardState(rows)));
 		}
 
 		Collections.sort(moves);
