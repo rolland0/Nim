@@ -1,75 +1,81 @@
 package group7.nim;
 
 public class BoardState implements Comparable<BoardState> {
-	public enum RowMaxes{
-		ROW1(3), ROW2(5), ROW3(7), MAX(18);
+	public enum RowMaxes {
+		ROW1(3), ROW2(5), ROW3(7);
 		private int value;
-		
-		private RowMaxes(int value){this.value = value;}
-		
-		public int getValue(){return value;}
+
+		private RowMaxes(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
 	}
-	
+
 	private final int NumRows = 3;
 
-	private int topRowValue;
-	private int middleRowValue;
-	private int bottomRowValue;
+	private int[] rows;
 	private double val;
-	
+
 	public BoardState() {
-		topRowValue = RowMaxes.ROW1.getValue();
-		middleRowValue = RowMaxes.ROW2.getValue();
-		bottomRowValue = RowMaxes.ROW3.getValue();
+		rows = new int[NumRows];
+		RowMaxes[] maxValues = RowMaxes.values();
+		if (rows.length == maxValues.length) {
+			for (int i = 0; i < rows.length; i++) {
+				rows[i] = maxValues[i].getValue();
+			}
+		}
 	}
 
-	public BoardState(int r1, int r2, int r3) {
-		topRowValue = r1;
-		middleRowValue = r2;
-		bottomRowValue = r3;
+	public BoardState(int[] newRows) {
+		rows = new int[NumRows];
+		setRows(newRows);
 	}
-	
-	public BoardState(int[] rows) {
-		setRows(rows);
-	}
-	
+
 	public int[] getRows() {
-		return new int[]{topRowValue, middleRowValue, bottomRowValue};
+		return rows.clone();
 	}
-	
-	public void setRows(int rows[]) {
-		if(rows.length < NumRows) {
-			topRowValue = 0;
-			middleRowValue = 0;
-			bottomRowValue = 0;
+
+	public void setRows(int newRows[]) {
+		if (newRows.length == NumRows) {
+			for (int i = 0; i < rows.length; i++) {
+				rows[i] = newRows[i];
+			}
+		} else {
+			for (int i = 0; i < rows.length; i++) {
+				rows[i] = 0;
+			}
 		}
-		else {
-			topRowValue = rows[0];
-			middleRowValue = rows[1];
-			bottomRowValue = rows[2];
-		}
+
 	}
-	
+
 	public double getVal() {
 		return val;
 	}
-	
+
 	public void setVal(double value) {
 		val = value;
 	}
 
 	public void print() {
-		
+
 		System.out.println("-------");
-		System.out.println(topRowValue);
-		System.out.println(middleRowValue);
-		System.out.println(bottomRowValue);
+		for (int i = 0; i < rows.length; i++) {
+			System.out.println((i + 1) + "| " + rows[i]);
+		}
 		System.out.println("-------");
 		System.out.println();
 	}
 
 	public String toString() {
-		return "" + topRowValue + " , " + middleRowValue + " , " + bottomRowValue + " : " + val;
+		String str = "";
+		for (int i = 0; i < NumRows; i++) {
+			str += (i < NumRows - 1) ? rows[i] + " , " : rows[i];
+		}
+		str += " : " + val;
+		return str;
 	}
 
 	// returns true if all rows correspond
@@ -80,16 +86,29 @@ public class BoardState implements Comparable<BoardState> {
 
 		BoardState other = (BoardState) obj;
 
-		return (this.topRowValue == other.topRowValue && this.middleRowValue == other.middleRowValue && this.bottomRowValue == other.bottomRowValue);
+		boolean areEqual = true;
+		for (int i = 0; i < rows.length && areEqual; i++) {
+			areEqual = rows[i] == other.rows[i];
+		}
+
+		return areEqual;
 	}
 
 	public int hashCode() {
-		return bottomRowValue + middleRowValue*10 + topRowValue*100;	 
+		int code = 0;
+		for (int i = 0; i < rows.length; i++) {
+			code += rows[i] * (int) Math.pow(10, i);
+		}
+		return code;
 	}
 
 	// returns true if there are no pieces left
 	public boolean isGameOver() {
-		return (this.topRowValue == 0 && this.middleRowValue == 0 && this.bottomRowValue == 0);
+		boolean areZero = true;
+		for (int i = 0; i < rows.length && areZero; i++) {
+			areZero = rows[i] == 0;
+		}
+		return areZero;
 	}
 
 	public void setValue(float value) {

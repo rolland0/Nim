@@ -24,10 +24,6 @@ public class Game {
 		playerTurn = 0;
 		gamesToPlay = 1;
 	}
-
-	public void resetBoard() {
-		gameBoard = new BoardState(3, 5, 7);
-	}
 	
 	public boolean isGamesToPlay() {
 		return gamesToPlay > 0;
@@ -43,7 +39,7 @@ public class Game {
 
 	public void setupGame() {
 			int selection = IO.getInstance().promptForGameType();
-			gameBoard = new BoardState(3, 5, 7);
+			gameBoard = new BoardState();
 			players.clear();
 			switch (selection) {
 			case 1:

@@ -22,7 +22,7 @@ public class AI implements IPlayer {
 		for (int i = 0; i <= BoardState.RowMaxes.ROW1.getValue(); i++) {
 			for (int j = 0; j <= BoardState.RowMaxes.ROW2.getValue(); j++) {
 				for (int k = 0; k <= BoardState.RowMaxes.ROW3.getValue(); k++) {
-					stats.put(new BoardState(i, j, k), 0d);
+					stats.put(new BoardState(new int[] {i, j, k}), 0d);
 				}
 			}
 		}
