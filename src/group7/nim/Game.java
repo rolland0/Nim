@@ -10,16 +10,18 @@ public class Game {
 		computerVersusComputer;
 	}
 	
-	BoardState gameBoard;
-	GameType currentGameType;
-	int gamesToPlay;
-	int playerTurn;
-	ArrayList<IPlayer> players;
-	boolean shouldPlay = true;
+	private BoardState gameBoard;
+	private GameType currentGameType;
+	private Menu menu;
+	private int gamesToPlay;
+	private int playerTurn;
+	private ArrayList<IPlayer> players;
+	private boolean shouldPlay = true;
 
 	Game() {
 		gameBoard = new BoardState();
 		players = new ArrayList<IPlayer>();
+		constructMenu();
 		
 		playerTurn = 0;
 		gamesToPlay = 1;
@@ -36,41 +38,60 @@ public class Game {
 	public boolean shouldPlay() {
 		return shouldPlay;
 	}
-
-	public void setupGame() {
-			int selection = IO.getInstance().promptForGameType();
-			gameBoard = new BoardState();
-			players.clear();
-			switch (selection) {
-			case 1:
+	
+	private void constructMenu() {
+		menu = new Menu("How would you like to play?");
+		
+		menu.addItem(new MenuItem("Player Vs. Player") {
+			@Override
+			public void run() {
 				currentGameType = GameType.playerVersusPlayer;
 				players.add(new Player("Player 1"));
 				players.add(new Player("Player 2"));
 				gamesToPlay = 1;
-				break;
-				
-			case 2:
+			}
+		});
+		
+		menu.addItem(new MenuItem("Player Vs. Computer") {
+			@Override
+			public void run() {
 				currentGameType = GameType.playerVersusComputer;
 				players.add(new Player("Player 1"));
 				players.add(new AI("Computer 1"));
 				shufflePlayers();
 				gamesToPlay = 1;
-				break;
-				
-			case 3:
+			}
+		});
+		
+		menu.addItem(new MenuItem("Computer Vs. Computer") {
+			@Override
+			public void run() {
 				currentGameType = GameType.computerVersusComputer;
 				players.add(new AI("Computer 1"));
 				players.add(new AI("Computer 2"));
 				gamesToPlay = IO.getInstance()
 						.promptUserForValidIntAboveZero("How many games should the computers play?");
-				break;
-			case 4:
-				shouldPlay = false;
-				break;
 			}
+		});
 		
+		menu.addItem(new MenuItem("Quit") {
+			@Override
+			public void run() {
+				shouldPlay = false;
+			}
+		});
 	}
-	
+
+	public void setupGame() {
+			gameBoard = new BoardState();
+			players.clear();
+			
+			System.out.print(menu.getOptions());
+			int selection = IO.getInstance().promptUserForValidIntUpTo(menu.highestOption());
+			if(menu.isValid(selection)) 
+				menu.execute(selection);
+	}
+		
 	public void update() {
 		gameBoard.print();
 		gameBoard.setRows(players.get(playerTurn).takeTurn(gameBoard.getRows()));
